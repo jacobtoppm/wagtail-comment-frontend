@@ -317,6 +317,7 @@ export function initCommentsApp(
     // Focus and pin the comment
     store.dispatch(setFocusedComment(commentId));
     store.dispatch(setPinnedComment(commentId));
+    return commentId;
   };
 
   const registerWidget = (widget: Widget) => {
