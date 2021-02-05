@@ -219,7 +219,6 @@ class CommentApp {
     authors: Map<string, string>,
     translationStrings: TranslatableStrings | null
   ) {
-    let focusedComment: number | null = null;
     let pinnedComment: number | null = null;
     this.setUser(userId, authors);
 
@@ -245,36 +244,6 @@ class CommentApp {
         />,
         outputElement
       );
-  
-      // Check if the focused comment has changed
-      if (state.comments.focusedComment !== focusedComment) {
-        // Unfocus previously focused annotation
-        if (focusedComment) {
-          // Note: the comment may have just been deleted. In that case,
-          // don't worry about unfocusing the annotation as that will be
-          // deleted
-          if (state.comments.comments.has(focusedComment)) {
-            const annotation = state.comments.comments.get(focusedComment)
-              .annotation;
-            if (annotation) {
-              annotation.onUnfocus();
-            }
-          }
-        }
-  
-        // Focus the new focused annotation
-        if (state.comments.focusedComment) {
-          const annotation = state.comments.comments.get(
-            state.comments.focusedComment
-          ).annotation;
-  
-          if (annotation) {
-            annotation.onFocus();
-          }
-        }
-  
-        focusedComment = state.comments.focusedComment;
-      }
   
       // Check if the pinned comment has changed
       if (state.comments.pinnedComment !== pinnedComment) {

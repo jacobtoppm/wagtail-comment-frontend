@@ -624,18 +624,10 @@ export default class CommentComponent extends React.Component<CommentProps> {
         element.offsetHeight
       );
     }
-
-    if (this.props.comment.annotation) {
-      this.props.comment.annotation.show();
-    }
   }
 
   componentWillUnmount() {
     this.props.layout.setCommentElement(this.props.comment.localId, null);
-
-    if (this.props.comment.annotation) {
-      this.props.comment.annotation.hide();
-    }
   }
 
   componentDidUpdate() {
