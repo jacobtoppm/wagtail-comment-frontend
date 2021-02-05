@@ -137,6 +137,7 @@ function renderCommentsUi(
 class CommentApp {
   store: Store;
   layout: LayoutController;
+  selectCommentsForContentPathFactory = selectCommentsForContentPathFactory;
 
   constructor() {
     this.store = createStore(reducer, {
@@ -156,6 +157,18 @@ class CommentApp {
         }
       })
     )
+  }
+  updateAnnotation(
+    annotation: Annotation,
+    commentId: number
+  ) {
+    this.store.dispatch(
+      updateComment(
+        commentId,
+        {annotation: annotation}
+      )
+    );
+    this.attachAnnotationLayout(annotation, commentId);
   }
   attachAnnotationLayout(
     annotation: Annotation,
@@ -197,42 +210,6 @@ class CommentApp {
     this.store.dispatch(setFocusedComment(commentId));
     this.store.dispatch(setPinnedComment(commentId));
     return commentId;
-  };
-  registerWidget(widget: Widget) {
-    const state = this.store.getState();
-    let currentlyEnabled = state.settings.commentsEnabled;
-    widget.setEnabled(currentlyEnabled);
-    const unsubscribeWidgetEnable = this.store.subscribe(() => {
-      const previouslyEnabled = currentlyEnabled;
-      currentlyEnabled = this.store.getState().settings.commentsEnabled;
-      if (previouslyEnabled !== currentlyEnabled) {
-        widget.setEnabled(currentlyEnabled);
-      }
-    });
-    const selectCommentsForContentPath = selectCommentsForContentPathFactory(
-      widget.contentpath
-    );
-    let currentComments = selectCommentsForContentPath(state);
-    const unsubscribeWidgetComments = this.store.subscribe(() => {
-      const previousComments = currentComments;
-      currentComments = selectCommentsForContentPath(this.store.getState());
-      if (previousComments !== currentComments) {
-        widget.onChangeComments(currentComments);
-      }
-    });
-    state.comments.comments.forEach((comment) => {
-      if (comment.contentpath === widget.contentpath) {
-        const annotation = widget.getAnnotationForComment(comment);
-        this.attachAnnotationLayout(annotation, comment.localId);
-        this.store.dispatch(
-          updateComment(comment.localId, { annotation: annotation })
-        );
-      }
-    });
-
-    widget.onRegister(this.makeComment, this.store);
-
-    return { unsubscribeWidgetEnable, unsubscribeWidgetComments };
   };
   renderApp(
     element: HTMLElement,
