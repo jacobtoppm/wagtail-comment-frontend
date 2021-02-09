@@ -147,3 +147,14 @@ export function deleteReply(
     replyId,
   };
 }
+
+export const commentActionFunctions = {
+  addComment,
+  updateComment,
+  deleteComment,
+  setFocusedComment,
+  setPinnedComment,
+  addReply,
+  updateReply,
+  deleteReply
+}

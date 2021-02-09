@@ -14,9 +14,16 @@ import {
   setFocusedComment,
   updateComment,
   setPinnedComment,
+  commentActionFunctions
 } from './actions/comments';
 import { updateGlobalSettings } from './actions/settings';
-import { selectCommentsForContentPathFactory } from './selectors';
+import {
+  selectComments,
+  selectCommentsForContentPathFactory,
+  selectCommentFactory,
+  selectEnabled,
+  selectFocused
+} from './selectors';
 import CommentComponent from './components/Comment';
 import { CommentFormSetComponent } from './components/Form';
 import TopBarComponent from './components/TopBar';
@@ -137,7 +144,16 @@ function renderCommentsUi(
 class CommentApp {
   store: Store;
   layout: LayoutController;
-  selectCommentsForContentPathFactory = selectCommentsForContentPathFactory;
+  utils = {
+    selectCommentsForContentPathFactory,
+    selectCommentFactory
+  }
+  selectors = {
+    selectComments,
+    selectEnabled,
+    selectFocused
+  }
+  actions = commentActionFunctions;
 
   constructor() {
     this.store = createStore(reducer, {
@@ -175,12 +191,6 @@ class CommentApp {
     commentId: number
   ) {
     // Attach an annotation to an existing comment in the layout
-
-    // Focus and pin comment when annotation is clicked
-    annotation.setOnClickHandler(() => {
-      this.store.dispatch(setFocusedComment(commentId));
-      this.store.dispatch(setPinnedComment(commentId));
-    });
 
     // const layout engine know the annotation so it would position the comment correctly
     this.layout.setCommentAnnotation(commentId, annotation);
