@@ -52,10 +52,6 @@ async function doDeleteComment(comment: Comment, store: Store) {
 
   try {
     store.dispatch(deleteComment(comment.localId));
-
-    if (comment.annotation) {
-      comment.annotation.onDelete();
-    }
   } catch (err) {
     console.error(err);
     store.dispatch(
@@ -225,10 +221,6 @@ export default class CommentComponent extends React.Component<CommentProps> {
       e.preventDefault();
 
       store.dispatch(deleteComment(comment.localId));
-
-      if (comment.annotation) {
-        comment.annotation.onDelete();
-      }
     };
 
     return (
