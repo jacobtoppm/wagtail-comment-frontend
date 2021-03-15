@@ -29,17 +29,6 @@ import TopBarComponent from './components/TopBar';
 
 import styles from '!css-to-string-loader!css-loader!sass-loader!./main.scss'; // eslint-disable-line import/no-unresolved
 
-export interface Widget {
-  contentpath: string;
-  setEnabled(enabled: boolean): void;
-  onChangeComments(comments: Comment[]): void;
-  getAnnotationForComment(comment: Comment): Annotation;
-  onRegister(
-    makeComment: (annotation: Annotation, contentpath: string) => void,
-    store: Store
-  ): void;
-}
-
 export interface TranslatableStrings {
   SAVE: string;
   SAVING: string;
