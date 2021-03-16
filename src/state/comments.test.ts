@@ -21,6 +21,7 @@ test('Initial comments state empty', () => {
 test('New comment added to state', () => {
   const newComment: Comment = {
     contentpath: 'test_contentpath',
+    position: '',
     localId: 5,
     annotation: null,
     remoteId: null,
@@ -45,6 +46,7 @@ test('New comment added to state', () => {
 test('Remote comment added to state', () => {
   const newComment: Comment = {
     contentpath: 'test_contentpath',
+    position: '',
     localId: 5,
     annotation: null,
     remoteId: 10,

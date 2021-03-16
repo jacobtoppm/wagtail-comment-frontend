@@ -73,6 +73,7 @@ export interface Comment {
   contentpath: string;
   localId: number;
   annotation: Annotation | null;
+  position: string;
   remoteId: number | null;
   mode: CommentMode;
   deleted: boolean;
@@ -94,6 +95,7 @@ export interface NewCommentOptions {
 
 export function newComment(
   contentpath: string,
+  position: string,
   localId: number,
   annotation: Annotation | null,
   author: Author | null,
@@ -107,6 +109,7 @@ export function newComment(
 ): Comment {
   return {
     contentpath,
+    position,
     localId,
     annotation,
     remoteId,
