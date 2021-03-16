@@ -140,6 +140,11 @@ export function CommentFormComponent({
         value={comment.text}
         prefix={fullPrefix}
       />
+      <PrefixedHiddenInput
+        fieldName="position"
+        value={comment.position}
+        prefix={fullPrefix}
+      />
       <CommentReplyFormSetComponent
         replies={Array.from(comment.replies.values())}
         prefix={fullPrefix}

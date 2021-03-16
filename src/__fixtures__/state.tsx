@@ -25,6 +25,7 @@ const localReply: CommentReply = {
 
 const remoteComment: Comment = {
   contentpath: 'test_contentpath',
+  position: '',
   localId: 1,
   annotation: null,
   remoteId: 1,
@@ -41,6 +42,7 @@ const remoteComment: Comment = {
 
 const localComment: Comment = {
   contentpath: 'test_contentpath_2',
+  position: '',
   localId: 4,
   annotation: null,
   remoteId: null,
