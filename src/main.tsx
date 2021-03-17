@@ -14,8 +14,16 @@ import {
   setFocusedComment,
   updateComment,
   setPinnedComment,
+  commentActionFunctions
 } from './actions/comments';
-import { selectCommentsForContentPathFactory } from './selectors';
+import { updateGlobalSettings } from './actions/settings';
+import {
+  selectComments,
+  selectCommentsForContentPathFactory,
+  selectCommentFactory,
+  selectEnabled,
+  selectFocused
+} from './selectors';
 import CommentComponent from './components/Comment';
 import { CommentFormSetComponent } from './components/Form';
 import TopBarComponent from './components/TopBar';
@@ -28,7 +36,8 @@ export interface Widget {
   onChangeComments(comments: Comment[]): void;
   getAnnotationForComment(comment: Comment): Annotation;
   onRegister(
-    makeComment: (annotation: Annotation, contentpath: string) => void
+    makeComment: (annotation: Annotation, contentpath: string) => void,
+    store: Store
   ): void;
 }
 
@@ -132,181 +141,73 @@ function renderCommentsUi(
   /* eslint-enable react/no-danger */
 }
 
-export function initCommentsApp(
-  element: HTMLElement,
-  outputElement: HTMLElement,
-  userId: any,
-  initialComments: InitialComment[],
-  authors: Map<string, string>,
-  translationStrings: TranslatableStrings | null
-) {
-  let focusedComment: number | null = null;
-  let pinnedComment: number | null = null;
-  const user = {
-    id: userId,
-    name: authors.get(String(userId)),
-  };
-
-  const store: Store = createStore(reducer, {
-    settings: {
-      user: user,
-      commentsEnabled: true,
-    },
-  });
-  const layout = new LayoutController();
-
-  const strings = translationStrings || defaultStrings;
-
-  // Check if there is "comment" query parameter.
-  // If this is set, the user has clicked on a "View on frontend" link of an
-  // individual comment. We should focus this comment and scroll to it
-  const urlParams = new URLSearchParams(window.location.search);
-  let initialFocusedCommentId: number | null = null;
-  if (urlParams.has('comment')) {
-    initialFocusedCommentId = parseInt(urlParams.get('comment'), 10);
+class CommentApp {
+  store: Store;
+  layout: LayoutController;
+  utils = {
+    selectCommentsForContentPathFactory,
+    selectCommentFactory
   }
-
-  const render = () => {
-    const state = store.getState();
-    const commentList: Comment[] = Array.from(state.comments.comments.values());
-
-    ReactDOM.render(
-      <CommentFormSetComponent
-        comments={commentList}
-        remoteCommentCount={state.comments.remoteCommentCount}
-      />,
-      outputElement
-    );
-
-    // Check if the focused comment has changed
-    if (state.comments.focusedComment !== focusedComment) {
-      // Unfocus previously focused annotation
-      if (focusedComment) {
-        // Note: the comment may have just been deleted. In that case,
-        // don't worry about unfocusing the annotation as that will be
-        // deleted
-        if (state.comments.comments.has(focusedComment)) {
-          const annotation = state.comments.comments.get(focusedComment)
-            .annotation;
-
-          if (annotation) {
-            annotation.onUnfocus();
-          }
-        }
-      }
-
-      // Focus the new focused annotation
-      if (state.comments.focusedComment) {
-        const annotation = state.comments.comments.get(
-          state.comments.focusedComment
-        ).annotation;
-
-        if (annotation) {
-          annotation.onFocus();
-        }
-      }
-
-      focusedComment = state.comments.focusedComment;
-    }
-
-    // Check if the pinned comment has changed
-    if (state.comments.pinnedComment !== pinnedComment) {
-      // Tell layout controller about the pinned comment
-      // so it is moved alongside its annotation
-      layout.setPinnedComment(state.comments.pinnedComment);
-
-      pinnedComment = state.comments.pinnedComment;
-    }
-
-    ReactDOM.render(
-      renderCommentsUi(store, layout, commentList, strings),
-      element,
-      () => {
-        // Render again if layout has changed (eg, a comment was added, deleted or resized)
-        // This will just update the "top" style attributes in the comments to get them to move
-        if (layout.refresh()) {
-          ReactDOM.render(
-            renderCommentsUi(store, layout, commentList, strings),
-            element
-          );
-        }
-      }
-    );
-  };
-
-  // Fetch existing comments
-  for (const comment of initialComments) {
-    const commentId = getNextCommentId();
-
-    // Create comment
-    store.dispatch(
-      addComment(
-        newComment(
-          comment.contentpath,
-          commentId,
-          null,
-          { id: comment.user, name: authors.get(String(comment.user)) },
-          Date.parse(comment.created_at),
-          {
-            remoteId: comment.pk,
-            text: comment.text,
-          }
-        )
-      )
-    );
-
-    // Create replies
-    for (const reply of comment.replies) {
-      store.dispatch(
-        addReply(
-          commentId,
-          newCommentReply(
-            getNextReplyId(),
-            { id: reply.user, name: authors.get(String(reply.user)) },
-            Date.parse(reply.created_at),
-            { remoteId: reply.pk, text: reply.text }
-          )
-        )
-      );
-    }
-
-    // If this is the initial focused comment. Focus and pin it
-    // TODO: Scroll to this comment
-    if (initialFocusedCommentId && comment.pk === initialFocusedCommentId) {
-      store.dispatch(setFocusedComment(commentId));
-      store.dispatch(setPinnedComment(commentId));
-    }
+  selectors = {
+    selectComments,
+    selectEnabled,
+    selectFocused
   }
+  actions = commentActionFunctions;
 
-  const attachAnnotationLayout = (
+  constructor() {
+    this.store = createStore(reducer, {
+      settings: {
+        user: null,
+        commentsEnabled: true
+      }
+    });
+    this.layout = new LayoutController();
+  }
+  setUser(userId: any, authors: Map<string, string>) {
+    this.store.dispatch(
+      updateGlobalSettings({
+        user: {
+          id: userId,
+          name: authors.get(String(userId)),
+        }
+      })
+    )
+  }
+  updateAnnotation(
     annotation: Annotation,
     commentId: number
-  ) => {
+  ) {
+    this.store.dispatch(
+      updateComment(
+        commentId,
+        {annotation: annotation}
+      )
+    );
+    this.attachAnnotationLayout(annotation, commentId);
+  }
+  attachAnnotationLayout(
+    annotation: Annotation,
+    commentId: number
+  ) {
     // Attach an annotation to an existing comment in the layout
 
-    // Focus and pin comment when annotation is clicked
-    annotation.setOnClickHandler(() => {
-      store.dispatch(setFocusedComment(commentId));
-      store.dispatch(setPinnedComment(commentId));
-    });
-
     // const layout engine know the annotation so it would position the comment correctly
-    layout.setCommentAnnotation(commentId, annotation);
+    this.layout.setCommentAnnotation(commentId, annotation);
   };
-
-  const makeComment = (annotation: Annotation, contentpath: string) => {
+  makeComment(annotation: Annotation, contentpath: string) {
     const commentId = getNextCommentId();
 
-    attachAnnotationLayout(annotation, commentId);
+    this.attachAnnotationLayout(annotation, commentId);
 
     // Create the comment
-    store.dispatch(
+    this.store.dispatch(
       addComment(
         newComment(
           contentpath,
           commentId,
           annotation,
-          store.getState().settings.user,
+          this.store.getState().settings.user,
           Date.now(),
           {
             mode: 'creating',
@@ -316,64 +217,133 @@ export function initCommentsApp(
     );
 
     // Focus and pin the comment
-    store.dispatch(setFocusedComment(commentId));
-    store.dispatch(setPinnedComment(commentId));
+    this.store.dispatch(setFocusedComment(commentId));
+    this.store.dispatch(setPinnedComment(commentId));
+    return commentId;
   };
+  renderApp(
+    element: HTMLElement,
+    outputElement: HTMLElement,
+    userId: any,
+    initialComments: InitialComment[],
+    authors: Map<string, string>,
+    translationStrings: TranslatableStrings | null
+  ) {
+    let pinnedComment: number | null = null;
+    this.setUser(userId, authors);
 
-  const registerWidget = (widget: Widget) => {
-    const state = store.getState();
-    let currentlyEnabled = state.settings.commentsEnabled;
-    widget.setEnabled(currentlyEnabled);
-    const unsubscribeWidgetEnable = store.subscribe(() => {
-      const previouslyEnabled = currentlyEnabled;
-      currentlyEnabled = store.getState().settings.commentsEnabled;
-      if (previouslyEnabled !== currentlyEnabled) {
-        widget.setEnabled(currentlyEnabled);
+    const strings = translationStrings || defaultStrings;
+
+    // Check if there is "comment" query parameter.
+    // If this is set, the user has clicked on a "View on frontend" link of an
+    // individual comment. We should focus this comment and scroll to it
+    const urlParams = new URLSearchParams(window.location.search);
+    let initialFocusedCommentId: number | null = null;
+    if (urlParams.has('comment')) {
+      initialFocusedCommentId = parseInt(urlParams.get('comment'), 10);
+    }
+
+    const render = () => {
+      const state = this.store.getState();
+      const commentList: Comment[] = Array.from(state.comments.comments.values());
+  
+      ReactDOM.render(
+        <CommentFormSetComponent
+          comments={commentList}
+          remoteCommentCount={state.comments.remoteCommentCount}
+        />,
+        outputElement
+      );
+  
+      // Check if the pinned comment has changed
+      if (state.comments.pinnedComment !== pinnedComment) {
+        // Tell layout controller about the pinned comment
+        // so it is moved alongside its annotation
+        this.layout.setPinnedComment(state.comments.pinnedComment);
+  
+        pinnedComment = state.comments.pinnedComment;
       }
-    });
-    const selectCommentsForContentPath = selectCommentsForContentPathFactory(
-      widget.contentpath
-    );
-    let currentComments = selectCommentsForContentPath(state);
-    const unsubscribeWidgetComments = store.subscribe(() => {
-      const previousComments = currentComments;
-      currentComments = selectCommentsForContentPath(store.getState());
-      if (previousComments !== currentComments) {
-        widget.onChangeComments(currentComments);
-      }
-    });
-    state.comments.comments.forEach((comment) => {
-      if (comment.contentpath === widget.contentpath) {
-        const annotation = widget.getAnnotationForComment(comment);
-        attachAnnotationLayout(annotation, comment.localId);
-        store.dispatch(
-          updateComment(comment.localId, { annotation: annotation })
+  
+      ReactDOM.render(
+        renderCommentsUi(this.store, this.layout, commentList, strings),
+        element,
+        () => {
+          // Render again if layout has changed (eg, a comment was added, deleted or resized)
+          // This will just update the "top" style attributes in the comments to get them to move
+          if (this.layout.refresh()) {
+            ReactDOM.render(
+              renderCommentsUi(this.store, this.layout, commentList, strings),
+              element
+            );
+          }
+        }
+      );
+    };
+  
+    // Fetch existing comments
+    for (const comment of initialComments) {
+      const commentId = getNextCommentId();
+  
+      // Create comment
+      this.store.dispatch(
+        addComment(
+          newComment(
+            comment.contentpath,
+            commentId,
+            null,
+            { id: comment.user, name: authors.get(String(comment.user)) },
+            Date.parse(comment.created_at),
+            {
+              remoteId: comment.pk,
+              text: comment.text,
+            }
+          )
+        )
+      );
+  
+      // Create replies
+      for (const reply of comment.replies) {
+        this.store.dispatch(
+          addReply(
+            commentId,
+            newCommentReply(
+              getNextReplyId(),
+              { id: reply.user, name: authors.get(String(reply.user)) },
+              Date.parse(reply.created_at),
+              { remoteId: reply.pk, text: reply.text }
+            )
+          )
         );
       }
-    });
-
-    widget.onRegister(makeComment);
-
-    return { unsubscribeWidgetEnable, unsubscribeWidgetComments };
-  };
-
-  render();
-
-  store.subscribe(render);
-
-  // Unfocus when document body is clicked
-  document.body.addEventListener('click', (e) => {
-    if (e.target instanceof HTMLElement) {
-      // ignore if click target is a comment or an annotation
-      if (!e.target.closest('#comments, [data-annotation]')) {
-        // Running store.dispatch directly here seems to prevent the event from being handled anywhere else
-        setTimeout(() => {
-          store.dispatch(setFocusedComment(null));
-          store.dispatch(setPinnedComment(null));
-        }, 1);
+  
+      // If this is the initial focused comment. Focus and pin it
+      // TODO: Scroll to this comment
+      if (initialFocusedCommentId && comment.pk === initialFocusedCommentId) {
+        this.store.dispatch(setFocusedComment(commentId));
+        this.store.dispatch(setPinnedComment(commentId));
       }
     }
-  });
 
-  return { makeComment, registerWidget };
+    render();
+
+    this.store.subscribe(render);
+  
+    // Unfocus when document body is clicked
+    document.body.addEventListener('click', (e) => {
+      if (e.target instanceof HTMLElement) {
+        // ignore if click target is a comment or an annotation
+        if (!e.target.closest('#comments, [data-annotation]')) {
+          // Running store.dispatch directly here seems to prevent the event from being handled anywhere else
+          setTimeout(() => {
+            this.store.dispatch(setFocusedComment(null));
+            this.store.dispatch(setPinnedComment(null));
+          }, 1);
+        }
+      }
+    });
+  }
+}
+
+export function initCommentApp() {
+  return new CommentApp();
 }
