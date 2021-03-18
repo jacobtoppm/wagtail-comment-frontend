@@ -102,14 +102,9 @@ test('Comment focused', () => {
 });
 
 test('Invalid comment not focused', () => {
-  const focusAction = actions.setFocusedComment(9000);
+  const focusAction = actions.setFocusedComment(9000, {updatePinnedComment: true});
   const newState = reducer(basicCommentsState, focusAction);
   expect(newState.focusedComment).toBe(basicCommentsState.focusedComment);
-});
-
-test('Invalid comment not pinned', () => {
-  const pinAction = actions.setPinnedComment(9000);
-  const newState = reducer(basicCommentsState, pinAction);
   expect(newState.pinnedComment).toBe(basicCommentsState.pinnedComment);
 });
 

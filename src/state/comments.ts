@@ -210,16 +210,14 @@ export function reducer(
 
   case actions.SET_FOCUSED_COMMENT:
     if ((action.commentId === null) || (state.comments.has(action.commentId))) {
-      newState = cloneComments(newState);
-      newState.focusedComment = action.commentId;
-    }
-    break;
-
-  case actions.SET_PINNED_COMMENT:
-    if ((action.commentId === null) || (state.comments.has(action.commentId))) {
       newState = update(newState, {
-        pinnedComment: action.commentId,
+        focusedComment: action.commentId,
       });
+      if (action.updatePinnedComment) {
+        newState = update(newState, {
+          pinnedComment: action.commentId
+        });
+      }
     }
     break;
 

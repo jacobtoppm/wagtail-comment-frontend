@@ -13,7 +13,6 @@ import {
   addReply,
   setFocusedComment,
   updateComment,
-  setPinnedComment,
   commentActionFunctions
 } from './actions/comments';
 import { updateGlobalSettings } from './actions/settings';
@@ -217,8 +216,7 @@ class CommentApp {
     );
 
     // Focus and pin the comment
-    this.store.dispatch(setFocusedComment(commentId));
-    this.store.dispatch(setPinnedComment(commentId));
+    this.store.dispatch(setFocusedComment(commentId, {updatePinnedComment: true}));
     return commentId;
   };
   renderApp(
@@ -319,8 +317,7 @@ class CommentApp {
       // If this is the initial focused comment. Focus and pin it
       // TODO: Scroll to this comment
       if (initialFocusedCommentId && comment.pk === initialFocusedCommentId) {
-        this.store.dispatch(setFocusedComment(commentId));
-        this.store.dispatch(setPinnedComment(commentId));
+        this.store.dispatch(setFocusedComment(commentId, {updatePinnedComment: true}));
       }
     }
 
@@ -335,8 +332,7 @@ class CommentApp {
         if (!e.target.closest('#comments, [data-annotation]')) {
           // Running store.dispatch directly here seems to prevent the event from being handled anywhere else
           setTimeout(() => {
-            this.store.dispatch(setFocusedComment(null));
-            this.store.dispatch(setPinnedComment(null));
+            this.store.dispatch(setFocusedComment(null, {updatePinnedComment: true}));
           }, 1);
         }
       }
