@@ -8,8 +8,7 @@ import {
   updateComment,
   deleteComment,
   setFocusedComment,
-  addReply,
-  setPinnedComment,
+  addReply
 } from '../../actions/comments';
 import { LayoutController } from '../../utils/layout';
 import { getNextReplyId } from '../../utils/sequences';
@@ -572,7 +571,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
     };
 
     const onDoubleClick = () => {
-      this.props.store.dispatch(setPinnedComment(this.props.comment.localId));
+      this.props.store.dispatch(setFocusedComment(this.props.comment.localId, {updatePinnedComment: true}));
     };
 
     const top = this.props.layout.getCommentPosition(

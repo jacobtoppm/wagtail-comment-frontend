@@ -4,7 +4,6 @@ import { Store } from '../state';
 import {
   addComment,
   setFocusedComment,
-  setPinnedComment,
   addReply,
 } from '../actions/comments';
 import {
@@ -115,8 +114,7 @@ export function addTestComment(
   );
 
   if (options.focused) {
-    store.dispatch(setFocusedComment(commentId));
-    store.dispatch(setPinnedComment(commentId));
+    store.dispatch(setFocusedComment(commentId, {updatePinnedComment: true}));
   }
 
   return commentId;
