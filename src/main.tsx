@@ -31,6 +31,7 @@ import TopBarComponent from './components/TopBar';
 import styles from '!css-to-string-loader!css-loader!sass-loader!./main.scss'; // eslint-disable-line import/no-unresolved
 
 export interface TranslatableStrings {
+  COMMENT: string;
   SAVE: string;
   SAVING: string;
   CANCEL: string;
@@ -47,6 +48,7 @@ export interface TranslatableStrings {
 }
 
 export const defaultStrings = {
+  COMMENT: 'Comment',
   SAVE: 'Save',
   SAVING: 'Saving...',
   CANCEL: 'Cancel',
@@ -237,7 +239,7 @@ export class CommentApp {
     const render = () => {
       const state = this.store.getState();
       const commentList: Comment[] = Array.from(state.comments.comments.values());
-  
+
       ReactDOM.render(
         <CommentFormSetComponent
           comments={commentList}
@@ -245,16 +247,16 @@ export class CommentApp {
         />,
         outputElement
       );
-  
+
       // Check if the pinned comment has changed
       if (state.comments.pinnedComment !== pinnedComment) {
         // Tell layout controller about the pinned comment
         // so it is moved alongside its annotation
         this.layout.setPinnedComment(state.comments.pinnedComment);
-  
+
         pinnedComment = state.comments.pinnedComment;
       }
-  
+
       ReactDOM.render(
         renderCommentsUi(this.store, this.layout, commentList, strings),
         element,
@@ -270,11 +272,11 @@ export class CommentApp {
         }
       );
     };
-  
+
     // Fetch existing comments
     for (const comment of initialComments) {
       const commentId = getNextCommentId();
-  
+
       // Create comment
       this.store.dispatch(
         addComment(
@@ -292,7 +294,7 @@ export class CommentApp {
           )
         )
       );
-  
+
       // Create replies
       for (const reply of comment.replies) {
         this.store.dispatch(
@@ -307,7 +309,7 @@ export class CommentApp {
           )
         );
       }
-  
+
       // If this is the initial focused comment. Focus and pin it
       // TODO: Scroll to this comment
       if (initialFocusedCommentId && comment.pk === initialFocusedCommentId) {
@@ -318,7 +320,7 @@ export class CommentApp {
     render();
 
     this.store.subscribe(render);
-  
+
     // Unfocus when document body is clicked
     document.body.addEventListener('click', (e) => {
       if (e.target instanceof HTMLElement) {
