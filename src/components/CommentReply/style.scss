@@ -1,14 +1,11 @@
 .comment-reply {
-  margin-top: 20px;
-  border-left: 5px solid $color-textarea-background;
-  padding-left: 7px;
+  margin-top: 40px;
   pointer-events: auto;
 
   &__text {
     color: $color-box-text;
-    font-size: 1em;
-    font-weight: bold;
-    margin-top: 12px;
+    font-size: 0.8em;
+    margin-top: 32px;
     margin-bottom: 0px;
 
     &--mode-deleting {
@@ -18,13 +15,25 @@
 
   &__author-date {
     color: $color-box-text;
-    font-size: 0.8em;
-    margin-top: 0px;
+    margin-left: 57px;
+    margin-top: 8px;
     margin-bottom: 12px;
   }
 
+  &__author {
+    font-size: 0.7em;
+    margin-bottom: 0;
+  }
+
+  &__date {
+    font-size: 0.7em;
+    color: $color-grey-25;
+    margin-top: 0;
+  }
+
   &--mode-deleting &__text,
-  &--mode-deleting &__author-date {
+  &--mode-deleting &__author-date,
+  &--mode-deleting &__date {
     color: $color-grey-3;
   }
 
@@ -93,6 +102,7 @@
   }
 
   &__progress {
+    margin-top: 20px;
     font-weight: bold;
     font-size: 0.8em;
   }

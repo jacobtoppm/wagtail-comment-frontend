@@ -74,13 +74,11 @@ export default class CommentComponent extends React.Component<CommentProps> {
   renderAuthorDate(): React.ReactFragment {
     const { comment } = this.props;
 
-    const author = comment.author ? comment.author.name + ' - ' : '';
-
     return (
-      <p className="comment__author-date">
-        {author}
-        {dateFormat(comment.date, 'h:MM mmmm d')}
-      </p>
+      <div className="comment__author-date">
+        <p className="comment__author">{comment.author ? comment.author.name : ''}</p>
+        <p className="comment__date">{dateFormat(comment.date, 'h:MM mmmm d')}</p>
+      </div>
     );
   }
 
@@ -317,8 +315,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.SAVING}</div>
         {this.renderReplies({ hideNewReply: true })}
       </>
@@ -336,8 +334,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
           {strings.SAVE_ERROR}
@@ -374,8 +372,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         <div className="comment__confirm-delete">
           {strings.CONFIRM_DELETE_COMMENT}
           <button
@@ -403,8 +401,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.DELETING}</div>
         {this.renderReplies({ hideNewReply: true })}
       </>
@@ -432,8 +430,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
           {strings.DELETE_ERROR}
@@ -510,8 +508,8 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <p className="comment__text">{comment.text}</p>
         {this.renderAuthorDate()}
+        <p className="comment__text">{comment.text}</p>
         <div className="comment__actions">
           {actions}
           <div className="comment__resolved">
