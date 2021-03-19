@@ -58,9 +58,9 @@ $color-textarea-placeholder-text: $color-grey-2;
 
 @mixin box {
   background-color: $color-box-background;
-  border: 2px solid $color-box-border;
+  border: 1px solid $color-box-border;
   padding: 25px;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.29);
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
   font-size: 16px;
   border-radius: 3px;
   color: $color-box-text;
