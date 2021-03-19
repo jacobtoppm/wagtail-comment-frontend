@@ -45,8 +45,12 @@ $color-state-draft: #808080;
 $color-state-absent: #ff8f11;
 $color-state-live-draft: #43b1b0;
 
-$color-box-background: $color-grey-1;
-$color-textarea-background: #5b5b5b;
+$color-box-background: $color-white;
+$color-box-border: $color-grey-3;
+$color-box-text: $color-black;
+$color-textarea-background: $color-white;
+$color-textarea-border: $color-grey-3;
+$color-textarea-placeholder-text: $color-grey-2;
 
 @mixin focus-outline {
   outline: $color-focus-outline auto 3px;
@@ -54,11 +58,12 @@ $color-textarea-background: #5b5b5b;
 
 @mixin box {
   background-color: $color-box-background;
+  border: 2px solid $color-box-border;
   padding: 20px;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.29);
   font-size: 16px;
   border-radius: 3px;
-  color: $color-white;
+  color: $color-box-text;
 
   textarea {
     font-family: 'Open Sans', sans-serif;
@@ -69,13 +74,14 @@ $color-textarea-background: #5b5b5b;
     padding: 10px;
     width: 100%;
     background-color: $color-textarea-background;
+    border: 2px solid $color-textarea-border;
     box-sizing: border-box;
     border-radius: 3px;
-    color: $color-white;
+    color: $color-box-text;
 
     &::placeholder {
       font-style: italic;
-      color: $color-grey-4;
+      color: $color-textarea-placeholder-text;
       opacity: 1;
     }
   }
@@ -89,7 +95,7 @@ $color-textarea-background: #5b5b5b;
   background-color: inherit;
   border: 1px solid $color-grey-25;
   border-radius: 3px;
-  color: $color-white;
+  color: $color-teal;
   cursor: pointer;
   text-transform: uppercase;
   font-family: inherit;
@@ -97,11 +103,13 @@ $color-textarea-background: #5b5b5b;
   line-height: 0;
 
   &--primary {
+    color: $color-white;
     border: 1px solid $color-teal;
     background-color: $color-teal;
   }
 
   &--red {
+    color: $color-white;
     border: 1px solid $color-red-very-dark;
     background-color: $color-red-very-dark;
   }

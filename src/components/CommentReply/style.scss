@@ -5,7 +5,7 @@
   pointer-events: auto;
 
   &__text {
-    color: $color-white;
+    color: $color-box-text;
     font-size: 1em;
     font-weight: bold;
     margin-top: 12px;
@@ -17,7 +17,7 @@
   }
 
   &__author-date {
-    color: $color-white;
+    color: $color-box-text;
     font-size: 0.8em;
     margin-top: 0px;
     margin-bottom: 12px;
@@ -57,7 +57,7 @@
 
   &__confirm-delete,
   &__error {
-    color: $color-white;
+    color: $color-box-text;
     font-weight: bold;
     font-size: 0.8em;
 
@@ -68,6 +68,7 @@
   }
 
   &__error {
+    color: $color-white;
     background-color: $color-red-dark;
     border-radius: 3px;
     padding: 5px;
@@ -79,6 +80,7 @@
     button {
       float: right;
       margin-left: 5px;
+      color: $color-white;
       background-color: $color-red-very-dark;
       border-color: $color-red-very-dark;
       padding: 2px;
@@ -91,7 +93,6 @@
   }
 
   &__progress {
-    color: $color-white;
     font-weight: bold;
     font-size: 0.8em;
   }
