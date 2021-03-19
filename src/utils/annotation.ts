@@ -1,3 +1,3 @@
 export interface Annotation {
-  getDesiredPosition(): number;
+  getDesiredPosition(focused: boolean): number;
 }

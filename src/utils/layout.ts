@@ -46,7 +46,7 @@ export class LayoutController {
 
     this.commentDesiredPositions.set(
       commentId,
-      annotation.getDesiredPosition() + OFFSET
+      annotation.getDesiredPosition(commentId === this.pinnedComment) + OFFSET
     );
   }
 
