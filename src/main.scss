@@ -93,14 +93,17 @@ $color-textarea-placeholder-text: $color-grey-2;
 
 @mixin button {
   background-color: inherit;
-  border: 1px solid $color-grey-25;
-  border-radius: 3px;
+  border: 1px solid $color-grey-3;
+  border-radius: 5px;
   color: $color-teal;
   cursor: pointer;
   text-transform: uppercase;
   font-family: inherit;
-  height: 26px;
-  line-height: 0;
+  font-size: 16px;
+  font-weight: bold;
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
 
   &--primary {
     color: $color-white;

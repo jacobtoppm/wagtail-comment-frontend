@@ -54,12 +54,7 @@
 
   &__actions &__button,
   &__confirm-delete &__button {
-    height: 26px;
     margin-right: 5px;
-    padding: 2px;
-    padding-bottom: 4px;
-    padding-left: 9px;
-    padding-right: 9px;
     margin-top: 5px;
     margin-right: 5px;
   }
@@ -71,8 +66,8 @@
     font-size: 0.8em;
 
     button {
-      margin-left: 5px;
-      margin-right: 0px;
+      margin-left: 10px;
+      margin-right: 0px !important;
     }
   }
 
@@ -87,6 +82,7 @@
     vertical-align: middle;
 
     button {
+      height: 26px;
       float: right;
       margin-left: 5px;
       color: $color-white;
@@ -95,9 +91,8 @@
       padding: 2px;
       padding-left: 10px;
       padding-right: 10px;
-      font-size: 0.9em;
+      font-size: 0.65em;
       font-weight: bold;
-      line-height: 0;
     }
   }
 
