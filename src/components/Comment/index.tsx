@@ -235,7 +235,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
               type="submit"
               className="comment__button comment__button--primary"
             >
-              {strings.SAVE}
+              {strings.COMMENT}
             </button>
             <button
               type="button"
