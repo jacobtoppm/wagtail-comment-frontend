@@ -41,6 +41,22 @@ export function commentFromSomeoneElse() {
     author: {
       id: 2,
       name: 'Someone else',
+      avatarUrl: 'https://gravatar.com/avatar/31c3d5cc27d1faa321c2413589e8a53f?s=200&d=robohash&r=x',
+    },
+  });
+
+  return <RenderCommentsForStorybook store={store} />;
+}
+
+export function commentFromSomeoneElseWithoutAvatar() {
+  const store: Store = createStore(reducer);
+
+  addTestComment(store, {
+    mode: 'default',
+    text: 'An example comment',
+    author: {
+      id: 2,
+      name: 'Someone else',
     },
   });
 

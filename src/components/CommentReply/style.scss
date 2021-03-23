@@ -1,6 +1,7 @@
 .comment-reply {
   margin-top: 40px;
   pointer-events: auto;
+  position: relative;
 
   &__text {
     color: $color-box-text;
@@ -16,19 +17,29 @@
   &__author-date {
     color: $color-box-text;
     margin-left: 57px;
-    margin-top: 8px;
-    margin-bottom: 12px;
   }
 
   &__author {
     font-size: 0.7em;
-    margin-bottom: 0;
+    margin: 0;
+  }
+
+  &__avatar {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid $color-grey-2;
   }
 
   &__date {
     font-size: 0.7em;
     color: $color-grey-25;
     margin-top: 0;
+  }
+
+  &--mode-deleting &__avatar {
+    opacity: 0.5;
   }
 
   &--mode-deleting &__text,

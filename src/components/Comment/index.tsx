@@ -75,10 +75,13 @@ export default class CommentComponent extends React.Component<CommentProps> {
     const { comment } = this.props;
 
     return (
-      <div className="comment__author-date">
-        <p className="comment__author">{comment.author ? comment.author.name : ''}</p>
-        <p className="comment__date">{dateFormat(comment.date, 'h:MM mmmm d')}</p>
-      </div>
+      <>
+        {comment.author && comment.author.avatarUrl && <img className="comment__avatar" src={comment.author.avatarUrl} />}
+        <div className="comment__author-date">
+          <p className="comment__author">{comment.author ? comment.author.name : ''}</p>
+          <p className="comment__date">{dateFormat(comment.date, 'h:MM mmmm d')}</p>
+        </div>
+      </>
     );
   }
 
