@@ -70,10 +70,13 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
     const { reply } = this.props;
 
     return (
-      <div className="comment-reply__author-date">
-        <p className="comment-reply__author">{reply.author ? reply.author.name : ''}</p>
-        <p className="comment-reply__date">{dateFormat(reply.date, 'h:MM mmmm d')}</p>
-      </div>
+      <>
+        {reply.author && reply.author.avatarUrl && <img className="comment-reply__avatar" src={reply.author.avatarUrl} />}
+        <div className="comment-reply__author-date">
+          <p className="comment-reply__author">{reply.author ? reply.author.name : ''}</p>
+          <p className="comment-reply__date">{dateFormat(reply.date, 'h:MM mmmm d')}</p>
+        </div>
+      </>
     );
   }
 
