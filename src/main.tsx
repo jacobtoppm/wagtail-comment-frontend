@@ -140,7 +140,7 @@ function renderCommentsUi(
   /* eslint-enable react/no-danger */
 }
 
-class CommentApp {
+export class CommentApp {
   store: Store;
   layout: LayoutController;
   utils = {
