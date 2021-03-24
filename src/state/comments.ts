@@ -1,6 +1,11 @@
 import type { Annotation } from '../utils/annotation';
 import * as actions from '../actions/comments';
 import { update } from './utils';
+import produce from "immer";
+
+import {enableMapSet} from "immer"
+
+enableMapSet()
 
 export interface Author {
   id: any;
@@ -137,163 +142,97 @@ export interface CommentsState {
   remoteCommentCount: number; // This is redundant, but stored for efficiency as it will change only as the app adds its loaded comments
 }
 
-function initialState(): CommentsState {
-  return {
-    comments: new Map(),
-    focusedComment: null,
-    pinnedComment: null,
-    remoteCommentCount: 0,
-  };
-}
+const INITIAL_STATE: CommentsState = {
+  comments: new Map(),
+  focusedComment: null,
+  pinnedComment: null,
+  remoteCommentCount: 0,
+};
 
-function cloneComments(state: CommentsState): CommentsState {
-  // Returns a new state with the comments list cloned
-  return update(state, { comments: new Map(state.comments.entries()) });
-}
-
-function cloneReplies(comment: Comment): Comment {
-  // Returns a new comment with the replies list cloned
-  return update(comment, { replies: new Map(comment.replies.entries()) });
-}
-
-export function reducer(
-  state: CommentsState | undefined,
-  action: actions.Action
-) {
-  let newState = state;
-  if (typeof newState === 'undefined') {
-    newState = initialState();
-  }
-
+export const reducer = produce((draft: CommentsState, action: actions.Action) => {
   switch (action.type) {
-  case actions.ADD_COMMENT:
-    newState = cloneComments(newState);
-    newState.comments.set(action.comment.localId, action.comment);
-    if (action.comment.remoteId) {
-      newState.remoteCommentCount += 1;
-    }
-    break;
-
-  case actions.UPDATE_COMMENT:
-    if (!newState.comments.has(action.commentId)) {
-      break;
-    }
-    newState = cloneComments(newState);
-    newState.comments.set(
-      action.commentId,
-      update(newState.comments.get(action.commentId), action.update)
-    );
-
-    break;
-
-  case actions.DELETE_COMMENT:
-    if (!newState.comments.has(action.commentId)) {
-      break;
-    }
-    newState = cloneComments(newState);
-    if (!newState.comments.get(action.commentId).remoteId) {
-      // If the comment doesn't exist in the database, there's no need to keep it around locally
-      newState.comments.delete(action.commentId);
-    } else {
-      // Otherwise mark it as deleted so we can output this to the form to delete it on the backend too
-      newState.comments.set(
-        action.commentId,
-        update(newState.comments.get(action.commentId), { deleted: true })
-      );
-    }
-
-    // Unset focusedComment if the focused comment is the one being deleted
-    if (state.focusedComment === action.commentId) {
-      newState.focusedComment = null;
-    }
-    if (state.pinnedComment === action.commentId) {
-      newState.pinnedComment = null;
-    }
-    break;
-
-  case actions.SET_FOCUSED_COMMENT:
-    if ((action.commentId === null) || (state.comments.has(action.commentId))) {
-      newState = update(newState, {
-        focusedComment: action.commentId,
-      });
-      if (action.updatePinnedComment) {
-        newState = update(newState, {
-          pinnedComment: action.commentId
-        });
+    case actions.ADD_COMMENT: {
+      draft.comments.set(action.comment.localId, action.comment);
+      if (action.comment.remoteId) {
+        draft.remoteCommentCount += 1;
       }
+      break;
     }
-    break;
+    case actions.UPDATE_COMMENT: {
+      const comment = draft.comments.get(action.commentId);
+      if (comment) {
+        update(comment, action.update)
+      }
+      break;
+    }
+    case actions.DELETE_COMMENT: {
+      const comment = draft.comments.get(action.commentId);
+      if (!comment) {
+        break
+      } else if (!comment.remoteId) {
+        // If the comment doesn't exist in the database, there's no need to keep it around locally
+        draft.comments.delete(action.commentId);
+      } else {
+        comment.deleted = true;
+      }
 
-  case actions.ADD_REPLY: {
-    if (!newState.comments.has(action.commentId)) {
+      // Unset focusedComment if the focused comment is the one being deleted
+      if (draft.focusedComment === action.commentId) {
+        draft.focusedComment = null;
+      }
+      if (draft.pinnedComment === action.commentId) {
+        draft.pinnedComment = null;
+      }
       break;
     }
-    newState = cloneComments(newState);
-    const comment = cloneReplies(newState.comments.get(action.commentId));
-    if (action.reply.remoteId) {
-      comment.remoteReplyCount += 1;
+    case actions.SET_FOCUSED_COMMENT: {
+      if ((action.commentId === null) || (draft.comments.has(action.commentId))) {
+        draft.focusedComment = action.commentId;
+        if (action.updatePinnedComment) {
+          draft.pinnedComment = action.commentId;
+        }
+      }
+      break;
     }
-    newState.comments.set(action.commentId, comment);
-    newState.comments
-      .get(action.commentId)
-      .replies.set(action.reply.localId, action.reply);
-    break;
+    case actions.ADD_REPLY: {
+      const comment = draft.comments.get(action.commentId);
+      if (!comment) {
+        break
+      }
+      if (action.reply.remoteId) {
+        comment.remoteReplyCount += 1;
+      }
+      comment.replies.set(action.reply.localId, action.reply);
+      break;
+    }
+    case actions.UPDATE_REPLY: {
+      const comment = draft.comments.get(action.commentId);
+      if (!comment) {
+        break;
+      }
+      const reply = comment.replies.get(action.replyId);
+      if (!reply) {
+        break;
+      }
+      update(reply, action.update)
+      break;
+    }
+    case actions.DELETE_REPLY: {
+      const comment = draft.comments.get(action.commentId);
+      if (!comment) {
+        break;
+      }
+      const reply = comment.replies.get(action.replyId);
+      if (!reply) {
+        break;
+      }
+      if (!reply.remoteId) {
+        // The reply doesn't exist in the database, so we don't need to store it locally
+         comment.replies.delete(reply.localId);
+      } else {
+        reply.deleted = true;
+      }
+      break;
+    }
   }
-  case actions.UPDATE_REPLY:
-    if (!newState.comments.has(action.commentId)) {
-      break;
-    }
-    if (
-      !newState.comments.get(action.commentId).replies.has(action.replyId)
-    ) {
-      break;
-    }
-    newState = cloneComments(newState);
-    newState.comments.set(
-      action.commentId,
-      cloneReplies(newState.comments.get(action.commentId))
-    );
-    newState.comments
-      .get(action.commentId)
-      .replies.set(
-        action.replyId,
-        update(
-          newState.comments.get(action.commentId).replies.get(action.replyId),
-          action.update
-        )
-      );
-    break;
-
-  case actions.DELETE_REPLY: {
-    if (!newState.comments.has(action.commentId)) {
-      break;
-    }
-    if (
-      !newState.comments.get(action.commentId).replies.has(action.replyId)
-    ) {
-      break;
-    }
-    newState = cloneComments(newState);
-    newState.comments.set(
-      action.commentId,
-      cloneReplies(newState.comments.get(action.commentId))
-    );
-    const reply = newState.comments
-      .get(action.commentId)
-      .replies.get(action.replyId);
-    if (!reply.remoteId) {
-      // The reply doesn't exist in the database, so we don't need to store it locally
-      newState.comments.get(action.commentId).replies.delete(action.replyId);
-    } else {
-      newState.comments
-        .get(action.commentId)
-        .replies.set(action.replyId, update(reply, { deleted: true }));
-    }
-    break;
-  }
-  default:
-    // Do nothing (linting wants an explicit default)
-  }
-
-  return newState;
-}
+}, INITIAL_STATE)

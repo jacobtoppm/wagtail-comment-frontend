@@ -65,6 +65,7 @@
     "react-dom": "^16.8.6"
   },
   "dependencies": {
+    "immer": "^9.0.1",
     "reselect": "^4.0.0"
   }
 }
