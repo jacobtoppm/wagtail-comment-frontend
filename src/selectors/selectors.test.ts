@@ -1,5 +1,5 @@
 import { basicCommentsState } from '../__fixtures__/state';
-import { initialState } from '../state/settings';
+import { INITIAL_STATE } from '../state/settings';
 
 import { selectCommentsForContentPathFactory } from './index';
 
@@ -7,7 +7,7 @@ test('Select comments for contentpath', () => {
   // test that the selectCommentsForContentPathFactory can generate selectors for the two contentpaths in basicCommentsState
   const state = {
     comments: basicCommentsState,
-    settings: initialState(),
+    settings: INITIAL_STATE,
   };
   const testContentPathSelector = selectCommentsForContentPathFactory(
     'test_contentpath'
