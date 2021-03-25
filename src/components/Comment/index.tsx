@@ -225,6 +225,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
+        {this.renderAuthorDate()}
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"
@@ -285,6 +286,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
+        {this.renderAuthorDate()}
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"

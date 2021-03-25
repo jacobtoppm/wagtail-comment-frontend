@@ -110,29 +110,32 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
     };
 
     return (
-      <form onSubmit={onSave}>
-        <textarea
-          className="comment-reply__input"
-          value={reply.newText}
-          onChange={onChangeText}
-          style={{ resize: 'none' }}
-        />
-        <div className="comment-reply__actions">
-          <button
-            type="submit"
-            className="comment-reply__button comment-reply__button--primary"
-          >
-            {strings.SAVE}
-          </button>
-          <button
-            type="button"
-            className="comment-reply__button"
-            onClick={onCancel}
-          >
-            {strings.CANCEL}
-          </button>
-        </div>
-      </form>
+      <>
+      {this.renderAuthorDate()}
+        <form onSubmit={onSave}>
+          <textarea
+            className="comment-reply__input"
+            value={reply.newText}
+            onChange={onChangeText}
+            style={{ resize: 'none' }}
+          />
+          <div className="comment-reply__actions">
+            <button
+              type="submit"
+              className="comment-reply__button comment-reply__button--primary"
+            >
+              {strings.SAVE}
+            </button>
+            <button
+              type="button"
+              className="comment-reply__button"
+              onClick={onCancel}
+            >
+              {strings.CANCEL}
+            </button>
+          </div>
+        </form>
+      </>
     );
   }
 

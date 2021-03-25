@@ -48,8 +48,8 @@ $color-state-live-draft: #43b1b0;
 $color-box-background: $color-white;
 $color-box-border: $color-grey-3;
 $color-box-text: $color-black;
-$color-textarea-background: $color-white;
-$color-textarea-border: $color-grey-3;
+$color-textarea-background: #f2fcfc;
+$color-textarea-border: #00b0b1;
 $color-textarea-placeholder-text: $color-grey-2;
 
 @mixin focus-outline {
@@ -62,12 +62,12 @@ $color-textarea-placeholder-text: $color-grey-2;
   padding: 25px;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
   font-size: 16px;
-  border-radius: 3px;
+  border-radius: 10px;
   color: $color-box-text;
 
   textarea {
     font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
+    font-size: 0.8em;
     border: none;
     margin: 0;
     margin-top: 5px;
@@ -76,7 +76,7 @@ $color-textarea-placeholder-text: $color-grey-2;
     background-color: $color-textarea-background;
     border: 2px solid $color-textarea-border;
     box-sizing: border-box;
-    border-radius: 3px;
+    border-radius: 7px;
     color: $color-box-text;
 
     &::placeholder {
