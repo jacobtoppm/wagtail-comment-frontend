@@ -10,6 +10,7 @@
         "declaration": true,
         "declarationDir": "dist/types",
         "noImplicitAny": true,
+        "strictNullChecks": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "esModuleInterop": true

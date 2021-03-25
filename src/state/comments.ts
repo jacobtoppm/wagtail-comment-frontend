@@ -83,7 +83,7 @@ export interface Comment {
   mode: CommentMode;
   deleted: boolean;
   author: Author | null;
-  date: number | null;
+  date: number;
   text: string;
   replies: Map<number, CommentReply>;
   newReply: string;
