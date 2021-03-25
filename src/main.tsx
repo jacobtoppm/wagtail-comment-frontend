@@ -185,7 +185,7 @@ export class CommentApp {
     // const layout engine know the annotation so it would position the comment correctly
     this.layout.setCommentAnnotation(commentId, annotation);
   };
-  makeComment(annotation: Annotation, contentpath: string, position = '') {
+  makeComment(annotation: Annotation, contentpath: string, position: string = '') {
     const commentId = getNextCommentId();
 
     this.attachAnnotationLayout(annotation, commentId);
