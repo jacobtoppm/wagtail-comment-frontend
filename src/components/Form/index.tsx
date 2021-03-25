@@ -4,7 +4,7 @@ import type { Comment, CommentReply } from '../../state/comments';
 
 interface PrefixedHiddenInputProps {
   prefix: string;
-  value: number | string;
+  value: number | string | null;
   fieldName: string;
 }
 
@@ -17,7 +17,7 @@ function PrefixedHiddenInput({
     <input
       type="hidden"
       name={`${prefix}-${fieldName}`}
-      value={value}
+      value={value === null ? '' : value}
       id={`id_${prefix}-${fieldName}`}
     />
   );

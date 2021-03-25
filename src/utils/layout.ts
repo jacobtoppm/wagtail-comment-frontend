@@ -1,4 +1,5 @@
 import type { Annotation } from './annotation';
+import { getOrDefault } from './maps'
 
 const GAP = 20.0; // Gap between comments in pixels
 const TOP_MARGIN = 100.0; // Spacing from the top to the first comment in pixels
@@ -44,6 +45,10 @@ export class LayoutController {
   updateDesiredPosition(commentId: number) {
     const annotation = this.commentAnnotations.get(commentId);
 
+    if (!annotation) {
+      return
+    }
+
     this.commentDesiredPositions.set(
       commentId,
       annotation.getDesiredPosition(commentId === this.pinnedComment) + OFFSET
@@ -82,8 +87,8 @@ export class LayoutController {
     // Build list of blocks (starting with one for each comment)
     let blocks: Block[] = Array.from(this.commentElements.keys()).map(
       (commentId) => ({
-        position: this.commentDesiredPositions.get(commentId),
-        height: this.commentHeights.get(commentId),
+        position: getOrDefault(this.commentDesiredPositions, commentId, 0),
+        height: getOrDefault(this.commentHeights, commentId, 0),
         comments: [commentId],
         containsPinnedComment:
             this.pinnedComment !== null && commentId === this.pinnedComment,
@@ -102,6 +107,8 @@ export class LayoutController {
       overlaps = false;
       const newBlocks: Block[] = [];
       let previousBlock: Block | null = null;
+      const pinnedCommentPosition = this.pinnedComment ? this.commentDesiredPositions.get(this.pinnedComment) : undefined
+
 
       for (const block of blocks) {
         if (previousBlock) {
@@ -134,11 +141,11 @@ export class LayoutController {
             // If this block contains the focused comment, position it so
             // the focused comment is in it's desired position
             if (
-              this.pinnedComment !== null &&
+              pinnedCommentPosition &&
               previousBlock.containsPinnedComment
             ) {
               previousBlock.position =
-                this.commentDesiredPositions.get(this.pinnedComment) -
+                pinnedCommentPosition -
                 previousBlock.pinnedCommentPosition;
             }
 
@@ -158,7 +165,10 @@ export class LayoutController {
       let currentPosition = block.position;
       block.comments.forEach((commentId) => {
         this.commentCalculatedPositions.set(commentId, currentPosition);
-        currentPosition += this.commentHeights.get(commentId) + GAP;
+        const height = this.commentHeights.get(commentId)
+        if (height) {
+          currentPosition += height + GAP;
+        }
       });
     });
 

@@ -66,7 +66,7 @@ export interface CommentProps {
   comment: Comment;
   isFocused: boolean;
   layout: LayoutController;
-  user: Author;
+  user: Author | null;
   strings: TranslatableStrings;
 }
 
@@ -487,7 +487,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
     };
 
     let actions = <></>;
-    if (comment.author === null || this.props.user.id === comment.author.id) {
+    if (comment.author === null || this.props.user && this.props.user.id === comment.author.id) {
       actions = (
         <>
           <button

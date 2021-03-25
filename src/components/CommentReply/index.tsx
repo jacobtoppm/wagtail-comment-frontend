@@ -61,7 +61,7 @@ export interface CommentReplyProps {
   comment: Comment;
   reply: CommentReply;
   store: Store;
-  user: Author;
+  user: Author | null;
   strings: TranslatableStrings;
 }
 
@@ -298,7 +298,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
     };
 
     let actions = <></>;
-    if (reply.author === null || this.props.user.id === reply.author.id) {
+    if (reply.author === null || this.props.user && this.props.user.id === reply.author.id) {
       actions = (
         <div className="comment-reply__actions">
           <button

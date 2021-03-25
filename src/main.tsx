@@ -5,6 +5,7 @@ import root from 'react-shadow';
 
 import type { Annotation } from './utils/annotation';
 import { LayoutController } from './utils/layout';
+import { getOrDefault } from './utils/maps'
 import { getNextCommentId, getNextReplyId } from './utils/sequences';
 import { Store, reducer } from './state';
 import { Comment, newCommentReply, newComment } from './state/comments';
@@ -158,7 +159,7 @@ export class CommentApp {
       updateGlobalSettings({
         user: {
           id: userId,
-          name: authors.get(String(userId)),
+          name: getOrDefault(authors, String(userId), ''),
         }
       })
     )
@@ -228,8 +229,9 @@ export class CommentApp {
     // individual comment. We should focus this comment and scroll to it
     const urlParams = new URLSearchParams(window.location.search);
     let initialFocusedCommentId: number | null = null;
-    if (urlParams.has('comment')) {
-      initialFocusedCommentId = parseInt(urlParams.get('comment'), 10);
+    const commentParams = urlParams.get('comment');
+    if (commentParams) {
+      initialFocusedCommentId = parseInt(commentParams, 10);
     }
 
     const render = () => {
@@ -281,7 +283,7 @@ export class CommentApp {
             comment.position,
             commentId,
             null,
-            { id: comment.user, name: authors.get(String(comment.user)) },
+            { id: comment.user, name: getOrDefault(authors, String(comment.user), '') },
             Date.parse(comment.created_at),
             {
               remoteId: comment.pk,
@@ -298,7 +300,7 @@ export class CommentApp {
             commentId,
             newCommentReply(
               getNextReplyId(),
-              { id: reply.user, name: authors.get(String(reply.user)) },
+              { id: reply.user, name: getOrDefault(authors, String(reply.user), '') },
               Date.parse(reply.created_at),
               { remoteId: reply.pk, text: reply.text }
             )
