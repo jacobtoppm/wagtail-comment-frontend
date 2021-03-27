@@ -584,7 +584,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
     return (
       <li
         key={this.props.comment.localId}
-        className={`comment comment--mode-${this.props.comment.mode}`}
+        className={`comment comment--mode-${this.props.comment.mode} ${this.props.isFocused ? 'comment--focused' : ''}`}
         style={{
           position: 'absolute',
           top: `${top}px`,
