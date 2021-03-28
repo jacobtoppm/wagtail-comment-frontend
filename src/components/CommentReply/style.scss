@@ -14,16 +14,6 @@
     }
   }
 
-  &__author-date {
-    color: $color-box-text;
-    margin-left: 57px;
-  }
-
-  &__author {
-    font-size: 0.7em;
-    margin: 0;
-  }
-
   &__avatar {
     position: absolute;
     width: 40px;
@@ -32,10 +22,14 @@
     border: 1px solid $color-grey-2;
   }
 
-  &__date {
+  &__author, &__date {
+    margin: 0;
+    margin-left: 57px;
     font-size: 0.7em;
+  }
+
+  &__date {
     color: $color-grey-25;
-    margin-top: 0;
   }
 
   &--mode-deleting &__avatar {
