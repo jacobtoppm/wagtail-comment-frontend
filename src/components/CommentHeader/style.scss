@@ -1,4 +1,6 @@
 .comment-header {
+  position: relative;
+
   &__avatar {
     position: absolute;
     width: 40px;
@@ -8,6 +10,7 @@
   }
 
   &__author, &__date {
+    max-width: calc(100% - 160px);  // Leave room for actions to the right and avatar to the left
     margin: 0;
     margin-left: 57px;
     font-size: 0.7em;
@@ -15,6 +18,55 @@
 
   &__date {
     color: $color-grey-25;
+  }
+
+  &__actions {
+    position: absolute;
+    right: 0;
+  }
+
+  &__action {
+    float: left;
+    margin-left: 20px;
+
+    > button, > details > summary {
+      list-style-type: none;
+      width: 40px;
+      height: 40px;
+      background-color: unset;
+      border: none;
+      color: $color-grey-2;
+      text-align: center;
+
+      :hover {
+        cursor: pointer;
+      }
+
+      svg {
+        height: 25px;
+        vertical-align: text-bottom;
+      }
+    }
+
+    > details {
+      position: relative;
+
+      > div {
+        position: absolute;
+        right: 0;
+        top: 60px;
+      }
+    }
+
+    &--teal {
+      > button, > details > summary {
+        color: $color-teal;
+      }
+    }
+  }
+
+  &__more-actions {
+    @include box;
   }
 }
 
