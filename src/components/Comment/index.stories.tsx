@@ -63,6 +63,23 @@ export function commentFromSomeoneElseWithoutAvatar() {
   return <RenderCommentsForStorybook store={store} />;
 }
 
+export function commentFromSomeoneWithAReallyLongName() {
+  const store: Store = createStore(reducer);
+
+  addTestComment(store, {
+    mode: 'default',
+    text: 'An example comment',
+    author: {
+      id: 1,
+      name: 'This person has a really long name and it should wrap to the next line',
+      avatarUrl: 'https://gravatar.com/avatar/31c3d5cc27d1faa321c2413589e8a53f?s=200&d=robohash&r=x',
+
+    },
+  });
+
+  return <RenderCommentsForStorybook store={store} />;
+}
+
 export function focused() {
   const store: Store = createStore(reducer);
 

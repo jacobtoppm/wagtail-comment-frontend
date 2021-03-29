@@ -211,7 +211,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"
@@ -272,7 +272,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"
@@ -302,11 +302,11 @@ export default class CommentComponent extends React.Component<CommentProps> {
   }
 
   renderSaving(): React.ReactFragment {
-    const { comment, strings } = this.props;
+    const { comment, store, strings } = this.props;
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.SAVING}</div>
         {this.renderReplies({ hideNewReply: true })}
@@ -325,7 +325,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
@@ -363,7 +363,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__confirm-delete">
           {strings.CONFIRM_DELETE_COMMENT}
@@ -388,11 +388,11 @@ export default class CommentComponent extends React.Component<CommentProps> {
   }
 
   renderDeleting(): React.ReactFragment {
-    const { comment, strings } = this.props;
+    const { comment, store, strings } = this.props;
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.DELETING}</div>
         {this.renderReplies({ hideNewReply: true })}
@@ -421,7 +421,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} />
         <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
@@ -448,71 +448,31 @@ export default class CommentComponent extends React.Component<CommentProps> {
   renderDefault(): React.ReactFragment {
     const { comment, store, strings } = this.props;
 
-    const onClickEdit = async (e: React.MouseEvent) => {
-      e.preventDefault();
-
-      store.dispatch(
-        updateComment(comment.localId, {
-          mode: 'editing',
-          newText: comment.text,
-        })
-      );
-    };
-
-    const onClickDelete = async (e: React.MouseEvent) => {
-      e.preventDefault();
-
-      store.dispatch(
-        updateComment(comment.localId, {
-          mode: 'delete_confirm',
-        })
-      );
-    };
-
-    const onClickResolve = async (e: React.MouseEvent) => {
-      e.preventDefault();
-
-      await doDeleteComment(comment, store);
-    };
-
-    let actions = <></>;
+    // Show edit/delete buttons if this comment was authored by the current user
+    let onEdit, onDelete;
     if (comment.author === null || this.props.user && this.props.user.id === comment.author.id) {
-      actions = (
-        <>
-          <button
-            type="button"
-            className="comment__button comment__button--primary"
-            onClick={onClickEdit}
-          >
-            {strings.EDIT}
-          </button>
-          <button
-            type="button"
-            className="comment__button"
-            onClick={onClickDelete}
-          >
-            {strings.DELETE}
-          </button>
-        </>
-      );
+      onEdit = () => {
+        store.dispatch(
+          updateComment(comment.localId, {
+            mode: 'editing',
+            newText: comment.text,
+          })
+        );
+      };
+
+      onDelete = () => {
+        store.dispatch(
+          updateComment(comment.localId, {
+            mode: 'delete_confirm',
+          })
+        );
+      };
     }
 
     return (
       <>
-        <CommentHeader author={comment.author} date={comment.date} />
+        <CommentHeader commentReply={comment} store={store} strings={strings} onResolve={doDeleteComment} onEdit={onEdit} onDelete={onDelete} />
         <p className="comment__text">{comment.text}</p>
-        <div className="comment__actions">
-          {actions}
-          <div className="comment__resolved">
-            <button
-              type="button"
-              className="comment__button"
-              onClick={onClickResolve}
-            >
-              {strings.RESOLVE}
-            </button>
-          </div>
-        </div>
         {this.renderReplies()}
       </>
     );
