@@ -1,0 +1,23 @@
+.comment-header {
+  &__avatar {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid $color-grey-2;
+  }
+
+  &__author, &__date {
+    margin: 0;
+    margin-left: 57px;
+    font-size: 0.7em;
+  }
+
+  &__date {
+    color: $color-grey-25;
+  }
+}
+
+.comment--mode-deleting .comment-header, .comment-reply--mode-deleting .comment-header {
+  opacity: 0.5;
+}

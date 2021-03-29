@@ -14,31 +14,11 @@
     }
   }
 
-  &__avatar {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    border: 1px solid $color-grey-2;
-  }
-
-  &__author, &__date {
-    margin: 0;
-    margin-left: 57px;
-    font-size: 0.7em;
-  }
-
-  &__date {
-    color: $color-grey-25;
-  }
-
   &--mode-deleting &__avatar {
     opacity: 0.5;
   }
 
-  &--mode-deleting &__text,
-  &--mode-deleting &__author-date,
-  &--mode-deleting &__date {
+  &--mode-deleting &__text {
     color: $color-grey-3;
   }
 
