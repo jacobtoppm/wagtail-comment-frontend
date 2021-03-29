@@ -141,6 +141,7 @@ $color-textarea-placeholder-text: $color-grey-2;
   pointer-events: none;
 }
 
+@import 'components/CommentHeader/style.scss';
 @import 'components/Comment/style.scss';
 @import 'components/CommentReply/style.scss';
 @import 'components/TopBar/style.scss';

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import dateFormat from 'dateformat';
 
 import type { Store } from '../../state';
 import { Author, Comment, newCommentReply } from '../../state/comments';
@@ -14,6 +13,7 @@ import { LayoutController } from '../../utils/layout';
 import { getNextReplyId } from '../../utils/sequences';
 import CommentReplyComponent from '../CommentReply';
 import type { TranslatableStrings } from '../../main';
+import { CommentHeader }  from '../CommentHeader';
 
 async function saveComment(comment: Comment, store: Store) {
   store.dispatch(
@@ -71,18 +71,6 @@ export interface CommentProps {
 }
 
 export default class CommentComponent extends React.Component<CommentProps> {
-  renderHeader(): React.ReactFragment {
-    const { comment } = this.props;
-
-    return (
-      <div className="comment__header">
-        {comment.author && comment.author.avatarUrl && <img className="comment__avatar" src={comment.author.avatarUrl} />}
-        <p className="comment__author">{comment.author ? comment.author.name : ''}</p>
-        <p className="comment__date">{dateFormat(comment.date, 'h:MM mmmm d')}</p>
-      </div>
-    );
-  }
-
   renderReplies({ hideNewReply = false } = {}): React.ReactFragment {
     const { comment, isFocused, store, user, strings } = this.props;
 
@@ -223,7 +211,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"
@@ -284,7 +272,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <form onSubmit={onSave}>
           <textarea
             className="comment__input"
@@ -318,7 +306,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.SAVING}</div>
         {this.renderReplies({ hideNewReply: true })}
@@ -337,7 +325,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
@@ -375,7 +363,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__confirm-delete">
           {strings.CONFIRM_DELETE_COMMENT}
@@ -404,7 +392,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__progress">{strings.DELETING}</div>
         {this.renderReplies({ hideNewReply: true })}
@@ -433,7 +421,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         {this.renderReplies({ hideNewReply: true })}
         <div className="comment__error">
@@ -511,7 +499,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={comment.author} date={comment.date} />
         <p className="comment__text">{comment.text}</p>
         <div className="comment__actions">
           {actions}

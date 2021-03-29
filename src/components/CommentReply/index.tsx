@@ -1,10 +1,10 @@
 import React from 'react';
-import dateFormat from 'dateformat';
 
 import type { Store } from '../../state';
 import type { Comment, CommentReply, Author } from '../../state/comments';
 import { updateReply, deleteReply } from '../../actions/comments';
 import type { TranslatableStrings } from '../../main';
+import { CommentHeader }  from '../CommentHeader';
 
 export async function saveCommentReply(
   comment: Comment,
@@ -66,18 +66,6 @@ export interface CommentReplyProps {
 }
 
 export default class CommentReplyComponent extends React.Component<CommentReplyProps> {
-  renderHeader(): React.ReactFragment {
-    const { reply } = this.props;
-
-    return (
-      <div className="comment-reply__header">
-        {reply.author && reply.author.avatarUrl && <img className="comment-reply__avatar" src={reply.author.avatarUrl} />}
-        <p className="comment-reply__author">{reply.author ? reply.author.name : ''}</p>
-        <p className="comment-reply__date">{dateFormat(reply.date, 'h:MM mmmm d')}</p>
-      </div>
-    );
-  }
-
   renderEditing(): React.ReactFragment {
     const { comment, reply, store, strings } = this.props;
 
@@ -109,7 +97,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-      {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <form onSubmit={onSave}>
           <textarea
             className="comment-reply__input"
@@ -142,7 +130,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         <div className="comment-reply__progress">{strings.SAVING}</div>
       </>
@@ -160,7 +148,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         <div className="comment-reply__error">
           {strings.SAVE_ERROR}
@@ -197,7 +185,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         <div className="comment-reply__confirm-delete">
           {strings.CONFIRM_DELETE_COMMENT}
@@ -225,7 +213,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         <div className="comment-reply__progress">{strings.DELETING}</div>
       </>
@@ -253,7 +241,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         <div className="comment-reply__error">
           {strings.DELETE_ERROR}
@@ -324,7 +312,7 @@ export default class CommentReplyComponent extends React.Component<CommentReplyP
 
     return (
       <>
-        {this.renderHeader()}
+        <CommentHeader author={reply.author} date={reply.date} />
         <p className="comment-reply__text">{reply.text}</p>
         {actions}
       </>
