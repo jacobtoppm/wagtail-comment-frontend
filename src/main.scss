@@ -23,6 +23,7 @@ $color-grey-3: darken($color-white, 15);
 $color-grey-4: darken($color-white, 10);
 $color-grey-5: darken($color-white, 2);
 $color-grey-7: #f2f2f2;
+$color-grey-8: #fbfbfb;
 
 $color-fieldset-hover: $color-grey-5;
 $color-input-border: $color-grey-4;
@@ -50,8 +51,10 @@ $color-box-background: $color-white;
 $color-box-border: $color-grey-3;
 $color-box-border-focused: $color-grey-2;
 $color-box-text: $color-black;
-$color-textarea-background: #f2fcfc;
-$color-textarea-border: #00b0b1;
+$color-textarea-background: $color-grey-8;
+$color-textarea-background-focused: #f2fcfc;
+$color-textarea-border: #ccc;
+$color-textarea-border-focused: #00b0b1;
 $color-textarea-placeholder-text: $color-grey-2;
 
 @mixin focus-outline {
@@ -90,6 +93,12 @@ $color-textarea-placeholder-text: $color-grey-2;
       font-style: italic;
       color: $color-textarea-placeholder-text;
       opacity: 1;
+    }
+
+    &:focus {
+      background-color: $color-textarea-background-focused;
+      border-color: $color-textarea-border-focused;
+      outline: unset;
     }
   }
 
