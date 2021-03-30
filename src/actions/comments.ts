@@ -143,5 +143,5 @@ export const commentActionFunctions = {
   setFocusedComment,
   addReply,
   updateReply,
-  deleteReply
-}
+  deleteReply,
+};
