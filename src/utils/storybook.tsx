@@ -109,7 +109,7 @@ export function addTestComment(
 
   store.dispatch(
     addComment(
-      newComment('test', commentId, null, author, Date.now(), addCommentOptions)
+      newComment('test', '', commentId, null, author, Date.now(), addCommentOptions)
     )
   );
 

@@ -7,9 +7,7 @@ import Radio from '.';
 export default { title: 'Radio' };
 
 export function radio() {
-  const [value, setValue] = React.useState(null);
-
-  console.log(value);
+  const [value, setValue] = React.useState<string | null>(null);
 
   return (
     <>
