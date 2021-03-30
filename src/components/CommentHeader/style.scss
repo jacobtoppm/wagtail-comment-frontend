@@ -28,22 +28,35 @@
   &__action {
     float: left;
     margin-left: 10px;
+    border-radius: 5px;
 
     &:hover {
       background-color: $color-grey-7;
-      border-radius: 3px;
     }
 
     > button, > details > summary {
       list-style-type: none;
       width: 50px;
       height: 50px;
-      mask-position: center;
-      -webkit-mask-position: center;
-      mask-size: 25px 25px;
-      -webkit-mask-size: 25px 25px;
-      mask-repeat: no-repeat;
-      -webkit-mask-repeat: no-repeat;
+      position: relative;
+      background-color: unset;;
+      border: unset;
+      -moz-outline-radius: 10px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        mask-position: center;
+        -webkit-mask-position: center;
+        mask-size: 25px 25px;
+        -webkit-mask-size: 25px 25px;
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+      }
 
       &:hover {
         cursor: pointer;
@@ -62,18 +75,22 @@
 
     &--resolve {
       > button, > details > summary {
-        background-color: $color-teal;
-        mask-image: url('./icons/check-solid.svg');
-        -webkit-mask-image: url('./icons/check-solid.svg');
+        &::before {
+          background-color: $color-teal;
+          mask-image: url('./icons/check-solid.svg');
+          -webkit-mask-image: url('./icons/check-solid.svg');
+        }
       }
     }
 
     &--more {
       > button, > details > summary {
-        background-color: $color-grey-25;
-        background-position: center;
-        mask-image: url('./icons/ellipsis-v-solid.svg');
-        -webkit-mask-image: url('./icons/ellipsis-v-solid.svg');
+        &::before {
+          background-color: $color-grey-25;
+          background-position: center;
+          mask-image: url('./icons/ellipsis-v-solid.svg');
+          -webkit-mask-image: url('./icons/ellipsis-v-solid.svg');
+        }
       }
     }
   }
