@@ -51,17 +51,15 @@ export const CommentHeader: FunctionComponent<CommentHeaderProps> = ({ commentRe
     <div className="comment-header">
       <div className="comment-header__actions">
         {onResolve &&
-          <div className="comment-header__action comment-header__action--teal">
+          <div className="comment-header__action comment-header__action--resolve">
             <button type="button" aria-label={strings.RESOLVE} onClick={onClickResolve}>
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" className="svg-inline--fa fa-check fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path></svg>
             </button>
           </div>
         }
         {(onEdit || onDelete) &&
-          <div className="comment-header__action">
+          <div className="comment-header__action comment-header__action--more">
             <details>
               <summary aria-label={strings.MORE_ACTIONS} aria-haspopup="menu" role="button">
-                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-v" className="svg-inline--fa fa-ellipsis-v fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"></path></svg>
               </summary>
 
               <div className="comment-header__more-actions">

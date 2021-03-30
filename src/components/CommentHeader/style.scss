@@ -27,24 +27,26 @@
 
   &__action {
     float: left;
-    margin-left: 20px;
+    margin-left: 10px;
+
+    &:hover {
+      background-color: $color-grey-7;
+      border-radius: 3px;
+    }
 
     > button, > details > summary {
       list-style-type: none;
-      width: 40px;
-      height: 40px;
-      background-color: unset;
-      border: none;
-      color: $color-grey-2;
-      text-align: center;
+      width: 50px;
+      height: 50px;
+      mask-position: center;
+      -webkit-mask-position: center;
+      mask-size: 25px 25px;
+      -webkit-mask-size: 25px 25px;
+      mask-repeat: no-repeat;
+      -webkit-mask-repeat: no-repeat;
 
-      :hover {
+      &:hover {
         cursor: pointer;
-      }
-
-      svg {
-        height: 25px;
-        vertical-align: text-bottom;
       }
     }
 
@@ -58,15 +60,59 @@
       }
     }
 
-    &--teal {
+    &--resolve {
       > button, > details > summary {
-        color: $color-teal;
+        background-color: $color-teal;
+        mask-image: url('./icons/check-solid.svg');
+        -webkit-mask-image: url('./icons/check-solid.svg');
+      }
+    }
+
+    &--more {
+      > button, > details > summary {
+        background-color: $color-grey-25;
+        background-position: center;
+        mask-image: url('./icons/ellipsis-v-solid.svg');
+        -webkit-mask-image: url('./icons/ellipsis-v-solid.svg');
       }
     }
   }
 
   &__more-actions {
-    @include box;
+    background-color: #333;
+    padding: .75rem 1rem;
+    min-width: 8rem;
+    text-transform: none;
+    position: absolute;
+    z-index: 1000;
+    list-style: none;
+    text-align: left;
+
+    &:before {
+      content: '';
+      border: .35rem solid transparent;
+      border-bottom-color: #333;
+      display: block;
+      position: absolute;
+      bottom: 100%;
+      right: 1rem;
+    }
+
+    button {
+      display: block;
+      background: unset;
+      border: unset;
+      color: #fff;
+      padding: 10px;
+      font-size: 20px;
+      width: 120px;
+      text-align: left;
+
+      &:hover {
+        color: #aaa;
+        cursor: pointer;
+      }
+    }
   }
 }
 
