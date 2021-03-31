@@ -8,7 +8,7 @@ import { LayoutController } from './utils/layout';
 import { getOrDefault } from './utils/maps'
 import { getNextCommentId, getNextReplyId } from './utils/sequences';
 import { Store, reducer } from './state';
-import { Comment, newCommentReply, newComment } from './state/comments';
+import { Comment, newCommentReply, newComment, Author } from './state/comments';
 import {
   addComment,
   addReply,
@@ -88,6 +88,16 @@ export interface InitialComment {
 }
 /* eslint-enable */
 
+const getAuthor = (authors: Map<string, {name: string, avatar_url: string}>, id: any): Author => {
+  const authorData = getOrDefault(authors, String(id), { name: '', avatar_url: '' });
+
+  return {
+    id,
+    name: authorData.name,
+    avatarUrl: authorData.avatar_url,
+  }
+};
+
 function renderCommentsUi(
   store: Store,
   layout: LayoutController,
@@ -158,13 +168,10 @@ export class CommentApp {
     });
     this.layout = new LayoutController();
   }
-  setUser(userId: any, authors: Map<string, string>) {
+  setUser(userId: any, authors: Map<string, {name: string, avatar_url: string}>) {
     this.store.dispatch(
       updateGlobalSettings({
-        user: {
-          id: userId,
-          name: getOrDefault(authors, String(userId), ''),
-        }
+        user: getAuthor(authors, userId)
       })
     )
   }
@@ -220,7 +227,7 @@ export class CommentApp {
     outputElement: HTMLElement,
     userId: any,
     initialComments: InitialComment[],
-    authors: Map<string, string>,
+    authors: Map<string, {name: string, avatar_url: string}>,
     translationStrings: TranslatableStrings | null
   ) {
     let pinnedComment: number | null = null;
@@ -287,7 +294,7 @@ export class CommentApp {
             comment.position,
             commentId,
             null,
-            { id: comment.user, name: getOrDefault(authors, String(comment.user), '') },
+            getAuthor(authors, comment.user),
             Date.parse(comment.created_at),
             {
               remoteId: comment.pk,
@@ -304,7 +311,7 @@ export class CommentApp {
             commentId,
             newCommentReply(
               getNextReplyId(),
-              { id: reply.user, name: getOrDefault(authors, String(reply.user), '') },
+              getAuthor(authors, reply.user),
               Date.parse(reply.created_at),
               { remoteId: reply.pk, text: reply.text }
             )
