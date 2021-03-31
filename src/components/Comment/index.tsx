@@ -93,7 +93,7 @@ export default class CommentComponent extends React.Component<CommentProps> {
       e.preventDefault();
 
       const replyId = getNextReplyId();
-      const reply = newCommentReply(replyId, null, Date.now(), {
+      const reply = newCommentReply(replyId, user, Date.now(), {
         text: comment.newReply,
         mode: 'default',
       });
