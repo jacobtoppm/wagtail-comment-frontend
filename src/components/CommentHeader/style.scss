@@ -6,7 +6,6 @@
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    border: 1px solid $color-grey-2;
   }
 
   &__author, &__date {
@@ -35,7 +34,10 @@
     }
 
     > button, > details > summary {
+      // Hides triangle on Firefox
       list-style-type: none;
+      // Hides triangle on Chrome
+      &::-webkit-details-marker { display: none; }
       width: 50px;
       height: 50px;
       position: relative;
